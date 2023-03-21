@@ -1,13 +1,13 @@
 #!/usr/bin/env/python
 
 '''
-ftk_merge_assembly_pieces.py -- merge pieces of a genome into a single FASTA file.
+merge_assembly_pieces.py -- merge pieces of a genome into a single FASTA file.
 
 Date: 2022-10-28
 Bugs: Any bugs should be reported to yanpengch@qq.com
 
 Usage:
-    cat file_lst | ftk_merge_assembly_pieces.py - -o output_directory
+    cat file_lst | merge_assembly_pieces.py - -o output_directory
 
 Input file example:
 GCA_021398005.1 ./GCA_021398005.1/ncbi_dataset/data/GCA_021398005.1/GCA_021398005.fna
