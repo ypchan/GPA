@@ -1,4 +1,5 @@
 # Phylogenomics
+![这是图片](Diagram.jpg "Diagram")
 
 ## merge_assembly_pieces.py
 Genome sequences of some genomes, specially the Refseq genomes (starts with GCF_), are stored in muliple multiple-fasta files as shown below:
