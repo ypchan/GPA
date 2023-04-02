@@ -164,7 +164,7 @@ def construct_busco_gene_dataset(label_busco_result_dict, df_filtered):
                 busco_sequence = read_fasta(busco_sequence_path)
                 if busco_id not in single_copy_busco_dict:
                     single_copy_busco_dict[busco_id] = {}
-                single_copy_busco_dict[busco_id][label] = busco_sequence
+                single_copy_busco_dict[busco_id][label] = busco_sequence.upper()
     print('', file=sys.stdout, flush=True)
     return single_copy_busco_dict
 
