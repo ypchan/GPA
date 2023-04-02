@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
-'''
-concatenate_BUSCO_gene_alignments.py -- concatenate trimmmed BUSCO gene alignment files.
-
-Date:  2021-09-21
-Bugs： Any bugs should be reported to yanpengch@qq.com
-'''
 
 import os
 import sys
 import tqdm
 import argparse
-import textwrap
 import fileinput
+
+'''
+concatenate_BUSCO_gene_alignments.py -- concatenate trimmmed BUSCO gene alignment files.
+Date:  2021-09-21
+Bugs： Any bugs should be reported to yanpengch@qq.com
+'''
 
 
 parser = argparse.ArgumentParser(
@@ -47,17 +46,20 @@ def read_all_alignments(fasta_file_list):
     '''read fasta into python dictionary
     '''
     all_alignment_dict = {}
-    for line in fileinput.input(args.alignment_lst):
+    pbar = tqdm.tqdm([line for line in fileinput.input(fasta_file_list)])
+    for line in pbar:
         alignment = line.rstrip('\n')
+        pbar.set_description(f"Reading {alignment}")
         alignment_basename = os.path.basename(alignment).split('.')[0]
         all_alignment_dict[alignment_basename] = {}
         with open(alignment, 'rt') as infh:
-            line = line.rstrip('\n')
-            if line.startswith('>'):
-                fa_id = line.lstrip('>')
-                all_alignment_dict[alignment_basename][fa_id] = []
-            else:
-                all_alignment_dict[alignment_basename][fa_id].append(line)
+            for line in infh:
+                line = line.rstrip('\n')
+                if line.startswith('>'):
+                    fa_id = line.lstrip('>')
+                    all_alignment_dict[alignment_basename][fa_id] = []
+                else:
+                    all_alignment_dict[alignment_basename][fa_id].append(line)
 
     for alignment_basename, fa_dict in all_alignment_dict.items():
         fd_dict = {k: ''.join(v) for k, v in fa_dict.items()}
@@ -159,8 +161,7 @@ def out_super_matrix(args_out, concatenated_dict):
     '''
     with open(args_out, 'wt') as ofh:
         for k, v in concatenated_dict.items():
-            wraped_sequence = textwrap.fill(v, width=80)
-            ofh.write(f'>{k}\n{wraped_sequence}\n')
+            ofh.write(f'>{k}\n{v}\n')
 
 
 if __name__ == '__main__':
