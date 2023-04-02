@@ -190,4 +190,5 @@ if __name__ == '__main__':
     single_copy_busco_dict = construct_busco_gene_dataset(
         label_busco_result_dict, df_filtered)
     out_busco_single_copy_dataset(single_copy_busco_dict, args.out_dir)
-    sys.exit('Done!')
+    print('Done.')
+    sys.exit()
