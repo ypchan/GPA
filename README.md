@@ -1,5 +1,5 @@
 # ![Title](images/Title.png)
-
+A python workflow for conducting phylognetic analysis based on BUSCO orthologs (protein sequences **NOT** nucleotide sequences).
 ## merge_assembly_pieces.py
 Genome sequences of some genomes, specially the Refseq genomes (starts with GCF_), are stored in muliple multiple-fasta files as shown below:
 
