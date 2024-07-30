@@ -1,31 +1,55 @@
 # ![Title](images/Title.png)
 A python workflow for conducting phylognetic analysis based on BUSCO orthologs (protein sequences **NOT** nucleotide sequences).
-## merge_assembly_pieces.py
-Genome sequences of some genomes, specially the Refseq genomes (starts with GCF_), are stored in muliple multiple-fasta files as shown below:
+## Common used workflow
+### Step1, if need
+For some genomes, the contigs or chrosomes are different fasta files, script```merge_pieces.py``` were wrote to merge these genome pieces into one FASTA file.
+```
+cat file_lst | merge_assembly_pieces.py - -o output_directory
+```
+Format of the input file.
+
+**Column1**: fingal genome prefix
+
+**column2**: different pieces.
+```
+GCA_021398005.1 ./GCA_021398005.1/ncbi_dataset/data/GCA_021398005.1/GCA_021398005.fna
+GCA_021436885.1 ./GCA_021436885.1/ncbi_dataset/data/GCA_021436885.1/chr1.fna
+...
+```
+### Step2: Obtaining basic information of genomes
+To obtain basic information of the genomes, how the quality of the assembly.
 
 ```
-./GCA_021436885.1/ncbi_dataset/data/GCA_021436885.1/chr1.fna    
-./GCA_021436885.1/ncbi_dataset/data/GCA_021436885.1/chr2.fna    
-./GCA_021436885.1/ncbi_dataset/data/GCA_021436885.1/chr3.fna    
-./GCA_021436885.1/ncbi_dataset/data/GCA_021436885.1/chr4.fna    
-./GCA_021436885.1/ncbi_dataset/data/GCA_021436885.1/unplaced.fna
+$ genome_stat.py -h
+usage: genome_stat.py [-h] [-t <1>] <genome_lst.tsv>
+
+genome_stat.py --stat basic information of genome assemblies.
+
+date: 2024-07-28
+bugs: yanpengch@qq.com
+usage:
+    ls 00_genomes/*.fna | genome_stat.py -t 4 - > genome.statistics.tsv
+    find 00_genomes -name "*.fna" -type f | genome_stat.py -t 4 - > genome.statistics.tsv
+
+positional arguments:
+  <genome_lst.tsv>      Path to the file containing genome paths or use '-' for standard input
+
+options:
+  -h, --help            show this help message and exit
+  -t <1>, --threads <1>
+                        Number of threads to use. Default 1
 ```
-Fragmented storage brings inconvenience to subsequent analysis. Therefore, I wrote this script to merge these fragmented genome sequences into one FASTA file.
-
-
-**Input** is a tab-delimited file as shown below:
+### Step3: Call BUSCO analysis
+Use BUSCO to evaluate genome completeness and identify BUSCO genes
 ```
-GCA_021398005.1    ./GCA_021398005.1/ncbi_dataset/data/GCA_021398005.1/GCA_021398005.fna
-GCA_021436885.1    ./GCA_021436885.1/ncbi_dataset/data/GCA_021436885.1/chr1.fna
+cat genome_accession.list | while read a;do echo "busco -i ${genome_dir}/${genome_abbrev}.fna \
+-o ${genome_abbrev}_busco \
+--out_path ${output_dir} \
+--offline --cpu 8 \
+--mode geno \
+-l ${lineage} &> ${output_dir}/${genome_abbrev}_busco.log";done  > run_busco.sh
+nohup ParaFly -c run_busco.sh -failed_cmds run_busco.sh.failed &
 ```
-
-**Output** is a FASTA file.   
-``output_directory/GCA_021398005.1.fna``
-
-**Recommended usage**    
-``
-find . -name '*.fna' | grep -v -e 'cds' -e 'rna' -e 'protein' | awk -F '/' '{print $2"\t"$0}' | merge_assembly_pieces.py - -o output_directory
-``
 
 ## summary_BUSCO_results.py
 When we are carrying out a big project including thousands of genomes, we should summarize all BUSCO results and further to remove bad assemblies. 
