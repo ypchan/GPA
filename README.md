@@ -39,6 +39,15 @@ options:
   -t <1>, --threads <1>
                         Number of threads to use. Default 1
 ```
+**Output**
+```
+Genome  #Contigs        GC      #N_character    Contig_longest  Contig_minimum  N90     L90     N50     L50     N75     L75
+00_genomes/GCA_000002515.1.fna  6       0.3642047151347448      44      2602197 1062590 1320834 5       1753957 3       1715506 4
+00_genomes/GCA_000002545.2.fna  13      0.36257972642186453     300     1455689 491328  558804  11      1100349 5       927101  8
+00_genomes/GCA_000002525.1.fna  6       0.45160903650109024     1171    4224103 2303261 2303261 6       3633272 3       3066374 5
+00_genomes/GCA_000002945.2.fna  4       0.3215030226710216      402     5579133 19431   2452883 3       4539804 2       4539804 2
+...
+```
 ### Step3: Call BUSCO analysis
 Use BUSCO to evaluate genome completeness and identify BUSCO genes
 ```
@@ -48,12 +57,14 @@ cat genome_accession.list | while read a;do echo "busco -i ${genome_dir}/${genom
 --offline --cpu 8 \
 --mode geno \
 -l ${lineage} &> ${output_dir}/${genome_abbrev}_busco.log";done  > run_busco.sh
+
+# parallel 
 nohup ParaFly -c run_busco.sh -failed_cmds run_busco.sh.failed &
 ```
 
-## summary_BUSCO_results.py
+## Step 4: summary BUSCO results
 When we are carrying out a big project including thousands of genomes, we should summarize all BUSCO results and further to remove bad assemblies. 
-For this purpose, I wrote ``summary_BUSCO_results.py``.
+For this purpose, I wrote ``summary_busco_results.py``.
 
 **Recommended usage**    
 ``
@@ -68,5 +79,6 @@ GCA_003568745.1	97.0%	96.3%	0.7%	0.8%	2.2%	1655	1643	12	13	38	1706
 GCA_014705165.1	97.6%	97.1%	0.5%	0.4%	2.0%	1665	1656	9	6	35	1706
 ```
 
-# single_copy_BUSCO_dataset.py
+# single_copy_busco_datasets.py
+
 
