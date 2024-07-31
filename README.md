@@ -1,5 +1,5 @@
 # ![Title](images/Title.png)
-A python workflow for conducting phylognetic analysis based on BUSCO orthologs (protein sequences **NOT** nucleotide sequences). ![Work flow](images/gpa_workflow.jpg)
+A  workflow for conducting phylognetic analysis based on BUSCO orthologs (protein sequences **NOT** nucleotide sequences). ![Work flow](images/gpa_workflow.jpg)
 ## Common used workflow
 ### Step1, if need
 For some genomes, the contigs or chrosomes are different fasta files, script```merge_pieces.py``` were wrote to merge these genome pieces into one FASTA file.
